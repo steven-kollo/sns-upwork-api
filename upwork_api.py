@@ -1,7 +1,9 @@
+import os
 import hubspot
 from hubspot.crm.imports import ApiException
 
-client = hubspot.Client.create(access_token="YOUR_ACCESS_TOKEN")
+client = hubspot.Client.create(
+    access_token=os.environ.get("HUBSPOT_KEY"))
 
 try:
     api_response = client.crm.imports.core_api.get_page()

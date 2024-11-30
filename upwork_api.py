@@ -1,17 +1,27 @@
-import os
-import hubspot
-from pprint import pprint
-from hubspot.crm.deals import SimplePublicObjectInputForCreate, ApiException
-
-client = hubspot.Client.create(access_token=os.environ.get("HUBSPOT_KEY"))
-
-properties = {
-    'dealname': 'test2',
-    'dealstage': 'appointmentscheduled'
+import requests, json, os
+token = os.environ.get("FRESHSALES_KEY")
+headers = {
+    'Content-Type': 'application/json',
+    'Authorization': f'Token token={token}'
 }
-simple_public_object_input_for_create = SimplePublicObjectInputForCreate(associations=[], object_write_trace_id="string", properties=properties)
-try:
-    api_response = client.crm.deals.basic_api.create(simple_public_object_input_for_create=simple_public_object_input_for_create)
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling basic_api->create: %s\n" % e)
+
+json_data = {
+    'deal': {
+        'name': 'Sample deal',
+        'amount': 23456,
+        'tags': [
+            '10-20 con'
+        ],
+        'custom_field': {
+            'cf_connects_required': 8
+        }
+    },
+}
+
+r = requests.post(
+    "https://sns1-782924923744476135.myfreshworks.com/crm/sales/api/deals/", 
+    json=json_data, 
+    headers=headers
+)
+
+print(json.dumps(r.json(), indent=4))
